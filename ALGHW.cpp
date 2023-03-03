@@ -4,6 +4,41 @@
 #include <stdio.h>
 using namespace std;
 
+struct node {
+	int data;
+	struct node* next;
+
+	node(int dataa) {
+		data = dataa;
+	}
+};
+
+class graph {
+public:
+	vector<node*> headers;
+	void add_edge(node x);
+	void delete_edge(node x);
+
+	graph(vector<int> vertex, vector<pair<int, int>> edges) {
+
+		for (int i = 0; i < vertex.size(); i++) {
+			node* new_node = new node(i);
+			headers.push_back(new_node);
+		}
+
+
+
+
+	}
+
+
+
+
+
+};
+
+
+
 int main() {
 	string input; //Taking input
 	cout << "Example input is '5  0  1  1  4  2  3  1  3  3  4  -1 '" << endl << "Please use this exact formatting, this program does not have input error detection/correction'" << endl << "Enter the input : ";
@@ -37,7 +72,7 @@ int main() {
 		edges.push_back(make_pair(numbers[i], numbers[i + 1]));
 	}
 
-
+	/*
 	for (int i = 0; i < v.size(); i++) {
 		cout << v[i] << " ";
 	}
@@ -46,6 +81,10 @@ int main() {
 	for (int i = 0; i < edges.size(); i++) {
 		cout << "(" << edges[i].first << "," << edges[i].second << "), ";
 	}
+	*/
+
+
+
 
 	return 0;
 }
