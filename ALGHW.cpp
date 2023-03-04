@@ -2,6 +2,8 @@
 #include <vector>
 #include <iostream>
 #include <stdio.h>
+#include <algorithm>
+
 using namespace std;
 
 struct node {
@@ -37,7 +39,7 @@ public:
 
 	}
 
-
+	/*
 	~graph() {
 		node* current;
 		node* temp;
@@ -51,7 +53,7 @@ public:
 			delete current;
 		}
 	}
-
+	*/
 
 };
 
@@ -68,7 +70,7 @@ void graph::delete_edge(int parent, int to_delete, bool selfcall) {
 	node* current = headers[parent];
 	if (current->next == NULL) { cout << "error, parent is empty"; error = true; }
 	if (error = false) {
-		node* previous;
+		node* previous = current;
 		while ((current->next != NULL) && (current->data != to_delete)) { previous = current; current = current->next; };
 
 		if (current->data == to_delete) {
@@ -88,6 +90,39 @@ void graph::delete_edge(int parent, int to_delete, bool selfcall) {
 		}
 
 	}
+}
+
+vector<int> DFS(graph grap, int start) {
+	vector<int> answer;
+	vector<node*> to_check;
+	node* current = grap.headers[start];
+	answer.push_back(current->data);
+	
+	while (current->next != NULL) {
+		to_check.push_back(current->next);
+		current = current->next;
+	}
+
+	while (!to_check.empty()) {
+		if ((find(answer.begin(), answer.end(), to_check[to_check.size() - 1]->data)) == answer.end()) {
+			answer.push_back(to_check[to_check.size() - 1]->data);
+		}
+		to_check.pop_back();
+
+		current = grap.headers[answer[answer.size() - 1]];
+		if (((find(answer.begin(), answer.end(), current->data)) == answer.end()) && ((find(to_check.begin(), to_check.end(), current)) == to_check.end())) {
+			to_check.push_back(current);
+		}
+		while (current->next != NULL) {
+			current = current->next;
+			if (((find(answer.begin(), answer.end(), current->data)) == answer.end()) && ((find(to_check.begin(), to_check.end(), current)) == to_check.end())) {
+				to_check.push_back(current);
+			}
+		}
+
+	}
+
+	return answer;
 }
 
 
@@ -153,7 +188,7 @@ int main() {
 				current = current->next;
 
 				if (current->next == NULL) {
-					cout << " and " << current->data;
+					cout << "and " << current->data;
 				}
 				else { cout << current->data << ","; }
 			}
@@ -161,9 +196,12 @@ int main() {
 		}
 	}
 	
+	vector<int> DFS_CHECK = DFS(The_Graph, 0);
 
-
-
+	cout << endl << "DFS Result (0 Start) : ";
+	for (int i = 0; i < DFS_CHECK.size(); i++) {
+		cout << DFS_CHECK[i] << ", ";
+	}
 
 	return 0;
 }
