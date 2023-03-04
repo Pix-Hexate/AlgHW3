@@ -22,6 +22,7 @@ public:
 	void add_edge(int node1, int node2);
 	void delete_edge(int parent, int to_delete, bool selfcall = false);
 	vector<int> DFS(int start);
+	void components();
 	vector<node*> headers;
 
 
@@ -125,6 +126,19 @@ vector<int> graph::DFS(int start) {
 	return answer;
 }
 
+void graph::components() {
+	vector<int> output;
+	for (int i = 0; i < headers.size(); i++) {
+		output = DFS(i);
+
+		cout << "Connected Components of " << i << " : ";
+		for (int j = 0; j < output.size(); j++) {
+			cout << output[j] << " ";
+		}
+		cout << endl;
+	}
+
+}
 
 int main() {
 	string input; //Taking input
@@ -196,14 +210,8 @@ int main() {
 		}
 	}
 
-	vector<int> DFS_CHECK = The_Graph.DFS(0);
 	
-	cout << endl << "DFS Result (0 Start) : ";
-	for (int i = 0; i < DFS_CHECK.size(); i++) {
-		cout << DFS_CHECK[i] << ", ";
-	}
-	
-	
+	The_Graph.components();
 
 	return 0;
 }
