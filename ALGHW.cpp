@@ -21,6 +21,7 @@ class graph {
 public:
 	void add_edge(int node1, int node2);
 	void delete_edge(int parent, int to_delete, bool selfcall = false);
+	vector<int> DFS(int start);
 	vector<node*> headers;
 
 
@@ -39,21 +40,20 @@ public:
 
 	}
 
-	/*
+	
 	~graph() {
 		node* current;
-		node* temp;
+		node* next;
 		for (int i = 0; i < headers.size(); i++) {
 			current = headers[i];
-			while (current->next != NULL) {
-				temp = current;
-				current = current->next;
-				delete temp;
+			while (current != NULL) {
+				next = current->next;
+				delete current;
+				current = next;
 			}
-			delete current;
 		}
 	}
-	*/
+	
 
 };
 
@@ -69,7 +69,7 @@ void graph::delete_edge(int parent, int to_delete, bool selfcall) {
 	if (parent == to_delete) { cout << "error, cannot delete header"; error = true; }
 	node* current = headers[parent];
 	if (current->next == NULL) { cout << "error, parent is empty"; error = true; }
-	if (error = false) {
+	if (error == false) {
 		node* previous = current;
 		while ((current->next != NULL) && (current->data != to_delete)) { previous = current; current = current->next; };
 
@@ -86,18 +86,18 @@ void graph::delete_edge(int parent, int to_delete, bool selfcall) {
 			cout << "Edge deleted";
 		}
 		else {
-			if(!selfcall){ cout << "error, edge not found";}
+			if (!selfcall) { cout << "error, edge not found"; }
 		}
 
 	}
 }
 
-vector<int> DFS(graph grap, int start) {
+vector<int> graph::DFS(int start) {
 	vector<int> answer;
 	vector<node*> to_check;
-	node* current = grap.headers[start];
+	node* current = headers[start];
 	answer.push_back(current->data);
-	
+
 	while (current->next != NULL) {
 		to_check.push_back(current->next);
 		current = current->next;
@@ -109,7 +109,7 @@ vector<int> DFS(graph grap, int start) {
 		}
 		to_check.pop_back();
 
-		current = grap.headers[answer[answer.size() - 1]];
+		current = headers[answer[answer.size() - 1]];
 		if (((find(answer.begin(), answer.end(), current->data)) == answer.end()) && ((find(to_check.begin(), to_check.end(), current)) == to_check.end())) {
 			to_check.push_back(current);
 		}
@@ -161,7 +161,7 @@ int main() {
 
 
 
-		
+
 	for (int i = 0; i < v.size(); i++) {
 		cout << v[i] << " ";
 	}
@@ -170,19 +170,19 @@ int main() {
 	for (int i = 0; i < edges.size(); i++) {
 		cout << "(" << edges[i].first << "," << edges[i].second << "), ";
 	}
-	
+
 	cout << endl << endl;
 
-	
+
 	graph The_Graph(v, edges);
 	for (int i = 0; i < The_Graph.headers.size(); i++) { //This outputs data
 		node* current = The_Graph.headers[i];
 
 		//These If, elif, elif, else statements are simply here to implement proper grammer in all cases of connection length
-		if(current->next == NULL){ cout << "Node " << current->data << " is linked to nothing" << endl; }
+		if (current->next == NULL) { cout << "Node " << current->data << " is linked to nothing" << endl; }
 		else if (current->next->next == NULL) { cout << "Node " << current->data << " is linked to node " << current->next->data << endl; }
 		else if (current->next->next->next == NULL) { cout << "Node " << current->data << " is linked to nodes " << current->next->data << " and " << current->next->next->data << endl; }
-		else{
+		else {
 			cout << "Node " << current->data << " is linked to nodes ";
 			while (current->next != NULL) {
 				current = current->next;
@@ -195,13 +195,15 @@ int main() {
 			cout << endl;
 		}
 	}
-	
-	vector<int> DFS_CHECK = DFS(The_Graph, 0);
 
+	vector<int> DFS_CHECK = The_Graph.DFS(0);
+	
 	cout << endl << "DFS Result (0 Start) : ";
 	for (int i = 0; i < DFS_CHECK.size(); i++) {
 		cout << DFS_CHECK[i] << ", ";
 	}
+	
+	
 
 	return 0;
 }
